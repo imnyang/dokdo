@@ -1,9 +1,9 @@
 import { request } from 'undici'
-import { ButtonBuilder, ButtonStyle, Message } from 'discord.js'
+import { ButtonBuilder, ButtonStyle } from 'discord.js'
 import { ProcessManager, HLJS } from '../utils'
-import type { Client } from '../'
+import type { Client, Context } from '../'
 
-export async function curl (message: Message, parent: Client): Promise<void> {
+export async function curl (message: Context, parent: Client): Promise<void> {
   if (!message.data.args) {
     message.reply('Missing Arguments.')
     return

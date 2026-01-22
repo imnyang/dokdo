@@ -1,9 +1,9 @@
 import child from 'child_process'
-import { ButtonBuilder, ButtonStyle, Message } from 'discord.js'
-import type { Client } from '../'
+import { ButtonBuilder, ButtonStyle } from 'discord.js'
+import type { Client, Context } from '../'
 import { ProcessManager, codeBlock } from '../utils'
 
-export async function exec (message: Message, parent: Client): Promise<void> {
+export async function exec (message: Context, parent: Client): Promise<void> {
   let closed = false
   if (!message.data.args) {
     message.reply('Missing Arguments.')

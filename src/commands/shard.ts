@@ -1,8 +1,8 @@
-import { Client as DiscordClient, ButtonBuilder, ButtonStyle, Message } from 'discord.js'
-import type { Client } from '../'
+import { Client as DiscordClient, ButtonBuilder, ButtonStyle } from 'discord.js'
+import type { Client, Context } from '../'
 import { ProcessManager, inspect } from '../utils'
 
-export async function shard (message: Message, parent: Client): Promise<void> {
+export async function shard (message: Context, parent: Client): Promise<void> {
   if (!message.data.args) {
     message.reply('Missing Arguments.')
     return

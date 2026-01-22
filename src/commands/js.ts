@@ -1,13 +1,20 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Embed, EmbedBuilder, Collection, Attachment, ButtonBuilder, ButtonStyle } from 'discord.js'
+import { Embed, EmbedBuilder, Collection, Attachment, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction } from 'discord.js'
 import type { Client, Context } from '../'
 import { ProcessManager as _ProcessManager, inspect as _inspect, isInstance as _isInstance, isGenerator as _isGenerator } from '../utils'
 
 export async function js (message: Context, _dokdo: Client): Promise<void> {
+  const send = async (payload: any) => {
+    if (message instanceof ChatInputCommandInteraction) {
+      if (message.replied || message.deferred) return message.followUp(payload)
+      return send(payload)
+    }
+    return send(payload)
+  }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { client } = _dokdo // for eval
   if (!message.data.args) {
-    message.reply('Missing Arguments.')
+    send('Missing Arguments.')
     return
   }
 
@@ -29,8 +36,8 @@ export async function js (message: Context, _dokdo: Client): Promise<void> {
         if (
           target instanceof Embed ||
           target instanceof EmbedBuilder
-        ) { await message.reply({ embeds: [target] }) } else if (_isInstance(target, Attachment)) {
-          await message.reply({
+        ) { await send({ embeds: [target] }) } else if (_isInstance(target, Attachment)) {
+          await send({
             files:
               target instanceof Collection ? target.toJSON() : [target]
           })
@@ -41,9 +48,9 @@ export async function js (message: Context, _dokdo: Client): Promise<void> {
         for (const value of output) {
           prettify(value)
 
-          if (typeof value === 'function') { await message.reply(value.toString()) } else if (typeof value === 'string') await message.reply(value)
+          if (typeof value === 'function') { await send(value.toString()) } else if (typeof value === 'string') await send(value)
           else {
-            await message.reply(
+            await send(
               _inspect(value, { depth: 1, maxArrayLength: 200 })
             )
           }

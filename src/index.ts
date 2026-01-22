@@ -31,9 +31,13 @@ declare module 'discord.js' {
   interface Message {
     data: MessageData;
   }
+  interface ChatInputCommandInteraction {
+    data: MessageData;
+    author: User;
+  }
 }
 
-export type Context = Message;
+export type Context = Message | ChatInputCommandInteraction;
 
 class Dokdo {
   public owners: Snowflake[];
@@ -126,59 +130,70 @@ class Dokdo {
           if (!ctx.data.type && type.ext !== 'txt') ctx.data.type = type.ext
         }
       }
-      if (
-        this.options.aliases &&
-        !this.options.aliases.includes(ctx.data.command)
-      ) { return }
-      if (!this.owners.includes(ctx.author.id)) {
-        let isOwner = false
+    } else if (ctx instanceof ChatInputCommandInteraction) {
+      const content = ctx.options.getString('content')
+      const codeParsed = Utils.codeBlock.parse(content || '')
+      ctx.data = {
+        raw: content || '',
+        command: ctx.commandName,
+        type: ctx.options.getSubcommand(false) || '',
+        args: codeParsed ? codeParsed[2] : (content || '')
+      }
+      ctx.author = ctx.user
+    } else return
 
-        if (this.options.isOwner) {
-          isOwner = await this.options.isOwner(ctx.author)
-        }
+    if (
+      this.options.aliases &&
+      !this.options.aliases.includes(ctx.data.command)
+    ) { return }
+    if (!this.owners.includes(ctx.author.id)) {
+      let isOwner = false
 
-        if (!isOwner) {
-          if (this.options.noPerm) this.options.noPerm(ctx)
-          return
-        }
+      if (this.options.isOwner) {
+        isOwner = await this.options.isOwner(ctx.author)
       }
 
-      if (!ctx.data.type) return main(ctx, this)
-      switch (ctx.data.type) {
-        case 'sh':
-        case 'bash':
-        case 'ps':
-        case 'powershell':
-        case 'shell':
-        case 'zsh':
-        case 'exec':
-          exec(ctx, this)
-          break
-        case 'js':
-        case 'javascript':
-          js(ctx, this)
-          break
-        case 'shard':
-          shard(ctx, this)
-          break
-        case 'jsi':
-        case 'javascript_inspect':
-          jsi(ctx, this)
-          break
-        case 'curl':
-          curl(ctx, this)
-          break
-        case 'cat':
-          cat(ctx, this)
-          break
-        default:
-          ctx.reply(
+      if (!isOwner) {
+        if (this.options.noPerm) this.options.noPerm(ctx)
+        return
+      }
+    }
+
+    if (!ctx.data.type) return main(ctx, this)
+    switch (ctx.data.type) {
+      case 'sh':
+      case 'bash':
+      case 'ps':
+      case 'powershell':
+      case 'shell':
+      case 'zsh':
+      case 'exec':
+        exec(ctx, this)
+        break
+      case 'js':
+      case 'javascript':
+        js(ctx, this)
+        break
+      case 'shard':
+        shard(ctx, this)
+        break
+      case 'jsi':
+      case 'javascript_inspect':
+        jsi(ctx, this)
+        break
+      case 'curl':
+        curl(ctx, this)
+        break
+      case 'cat':
+        cat(ctx, this)
+        break
+      default:
+        ctx.reply(
             `Available Options: ${Object.keys(Commands)
               .filter((t) => t !== 'main')
               .map((t) => `\`${t}\``)
               .join(', ')}`
-          )
-      }
+        )
     }
   }
 

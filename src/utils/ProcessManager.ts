@@ -1,6 +1,7 @@
 import Discord, {
   ButtonBuilder,
   ButtonInteraction,
+  ChatInputCommandInteraction,
   ComponentType,
   InteractionCollector,
   Message,
@@ -48,6 +49,7 @@ export class ProcessManager {
   public author: User
   public actions: Action[]
   public wait: number
+  public context: Context
   public message?: Message
   public argument: never[]
   public args: any
@@ -63,6 +65,7 @@ export class ProcessManager {
     public dokdo: Client,
     public options: ProcessOptions = {}
   ) {
+    this.context = message
     this.target = message.channel as TextChannel
     this.dokdo = dokdo
     this.content = content || '​'
@@ -83,9 +86,17 @@ export class ProcessManager {
 
   async init (): Promise<void> {
     this.messageContent = this.genText()
-    this.message = await this.target.send(
-      this.filterSecret(this.messageContent)
-    )
+    if (this.context instanceof ChatInputCommandInteraction) {
+      if (this.context.replied || this.context.deferred) {
+        this.message = await this.context.editReply({ content: this.filterSecret(this.messageContent) }) as unknown as Message
+      } else {
+        this.message = await this.context.reply({ content: this.filterSecret(this.messageContent), fetchReply: true }) as unknown as Message
+      }
+    } else {
+      this.message = await this.target.send(
+        this.filterSecret(this.messageContent)
+      )
+    }
   }
 
   async addAction (actions: Action[], args?: Record<string, unknown>): Promise<void> {

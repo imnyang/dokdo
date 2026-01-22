@@ -88,6 +88,11 @@ client.on('messageCreate', async message => {
   await DokdoHandler.run(message) // try !dokdo
 })
 
+client.on('interactionCreate', async interaction => {
+  if (!interaction.isChatInputCommand()) return
+  if (interaction.commandName === 'dok') await DokdoHandler.run(interaction)
+})
+
 client.login('super secret token')
 ```
 

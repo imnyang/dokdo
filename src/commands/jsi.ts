@@ -1,8 +1,8 @@
-import { Collection, ButtonBuilder, ButtonStyle, Message } from 'discord.js'
-import type { Client } from '../'
+import { Collection, ButtonBuilder, ButtonStyle } from 'discord.js'
+import type { Client, Context } from '../'
 import { ProcessManager as _ProcessManager, count as _count, inspect as _inspect, table as _table, typeFind as _typeFind } from '../utils'
 
-export async function jsi (message: Message, _dokdo: Client): Promise<void> {
+export async function jsi (message: Context, _dokdo: Client): Promise<void> {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { client } = _dokdo
   if (!message.data.args) {
