@@ -20,7 +20,7 @@
     "declaration": true,
     "declarationMap": true,
     "importHelpers": true,
-    "importsNotUsedAsValues": "error",
+    // "importsNotUsedAsValues": "error",
     "inlineSources": true,
     "newLine": "lf",
     "noEmitHelpers": true,

@@ -1,7 +1,10 @@
 {
-  "name": "dokdo",
-  "version": "1.1.0",
+  "name": "@imnyang/dokdo",
+  "version": "1.1.2",
   "description": "Dokdo. Easy Discord bot debuging tool.",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsup",
     "dev": "yarn test:bot",
@@ -27,11 +30,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wonderlandpark/dokdo.git"
+    "url": "git+https://github.com/imnyang/dokdo.git"
   },
   "author": {
-    "name": "wonderlandpark",
-    "email": "wonderlandpark@outlook.kr"
+    "name": "imnyang",
+    "email": "me@imnya.ng"
   },
   "license": "MIT",
   "bugs": {
@@ -42,6 +45,7 @@
     "@types/node": "^22.19.7",
     "@typescript-eslint/eslint-plugin": "^8.53.1",
     "@typescript-eslint/parser": "^8.53.1",
+    "discord.js": "^14.25.1",
     "eslint": "^9.39.2",
     "eslint-config-standard": "^16.0.3",
     "eslint-plugin-import": "^2.32.0",
@@ -52,7 +56,8 @@
     "eslint-plugin-promise": "^5.2.0",
     "mocha": "^9.2.2",
     "tsup": "^6.7.0",
-    "typescript": "^4.9.5"
+    "typescript": "latest",
+    "undici": "^7.19.0"
   },
   "engines": {
     "node": ">=22.12.0"
@@ -61,5 +66,8 @@
   "peerDependencies": {
     "discord.js": "^14.25.1",
     "undici": "^7.19.0"
+  },
+  "dependencies": {
+    "@imnyang/dokdo": "^1.1.0"
   }
 }

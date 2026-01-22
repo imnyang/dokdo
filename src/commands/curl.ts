@@ -23,7 +23,7 @@ export async function curl (message: Context, parent: Client): Promise<void> {
     }
   } catch (e: any) {
     type = 'js'
-    message.react('❗')
+    if ('react' in message) message.react('❗')
     res = e.toString()
   }
 
